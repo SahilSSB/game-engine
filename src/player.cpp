@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <vector>
 
-Player::Player() : Entity(50, 100) {}
+Player::Player() : Entity(45, 100) {}
 
 void Player::updateHitbox() {
 	hitbox.x = position.x - hitbox.width / 2;
@@ -16,12 +16,6 @@ void Player::update(float dt) {
 	pVelocity.y += pGravity * dt;
 	position.x += pVelocity.x * dt;
 	position.y += pVelocity.y * dt;
-
-	if (position.y >= 200) {
-		position.y = 200;
-		pVelocity.y = 0;
-		isGrounded = true;
-	}
 
 	if (pState == PlayerState::ATTACK) {
 		pAnimationTimer += dt;
@@ -54,6 +48,7 @@ void Player::update(float dt) {
 
 void Player::render() {
 	if (playerAsset != nullptr) {
+		// DrawRectangleRec(hitbox, RED);
 		int targetRow = 0;
 		int totalFrames = 1;
 		float fw = 64;

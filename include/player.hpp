@@ -10,7 +10,6 @@ struct Animation {
 	Texture2D atlas;
 	int framesPerSecond;
 	std::vector<Rectangle> rects;
-	int rectLength;
 };
 
 enum class PlayerState { NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH };
@@ -32,7 +31,6 @@ private:
 	Asset *playerAsset = nullptr;
 	int framesPerSecond = 0;
 	Rectangle *rects;
-	int rectLength = 0;
 	Texture2D atlas;
 
 public:
@@ -51,6 +49,12 @@ public:
 	void handleInput(float dt);
 	PlayerState getPlayerState() { return pState; }
 	void setPlayerState(PlayerState s) { pState = s; }
+
+	Rectangle getHitbox() { return hitbox; }
+	Vector2 getVelocity() { return pVelocity; }
+	void setVelocityY(float y) { pVelocity.y = y; }
+	void setPositionY(float y) { position.y = y; }
+	void setGrounded(bool g) { isGrounded = g; }
 };
 
 #endif

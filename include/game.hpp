@@ -26,8 +26,8 @@ public:
 
 class GameScreen : public Scene {
 private:
-	Player *player;
-	std::vector<Entity *> entities;
+	Player *p;
+	std::vector<Rectangle> platforms;
 
 public:
   EntityManager entityManager;
