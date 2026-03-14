@@ -1,9 +1,11 @@
 #include "../include/player.hpp"
-#include "raylib.h"
-#include <cstdlib>
-#include <vector>
+#include "../include/animation.hpp"
 
-Player::Player() : Entity(45, 100) {}
+#include "raylib.h"
+
+#include <cstdlib>
+
+Player::Player() : Entity(40, 100) {}
 
 void Player::updateHitbox() {
 	hitbox.x = position.x - hitbox.width / 2;
@@ -12,16 +14,14 @@ void Player::updateHitbox() {
 
 void Player::update(float dt) {
 	handleInput(dt);
-
-	pVelocity.y += pGravity * dt;
-	position.x += pVelocity.x * dt;
-	position.y += pVelocity.y * dt;
+	handlePhysics(dt);
+	updateHitbox();
 
 	if (pState == PlayerState::ATTACK) {
-		pAnimationTimer += dt;
-		if (pAnimationTimer >= 0.70f) {
+		pAttackTimer += dt;
+		if (pAttackTimer >= 0.70f) {
 			pState = PlayerState::NORMAL;
-			pAnimationTimer = 0.f;
+			pAttackTimer = 0.f;
 		}
 	} else {
 		if (!isGrounded) {
@@ -32,23 +32,11 @@ void Player::update(float dt) {
 			pState = PlayerState::NORMAL;
 		}
 	}
-
-	if (pVelocity.x != 0) {
-		pAnimationTimer += dt;
-		if (pAnimationTimer >= 0.1f) {
-			pCurrentFrame = (pCurrentFrame + 1) % 4;
-			pAnimationTimer = 0.0f;
-		}
-	} else {
-		pCurrentFrame = 0;
-	}
-
-	updateHitbox();
 }
 
 void Player::render() {
-	if (playerAsset != nullptr) {
-		// DrawRectangleRec(hitbox, RED);
+	if (asset != nullptr) {
+		DrawRectangleRec(hitbox, RED);
 		int targetRow = 0;
 		int totalFrames = 1;
 		float fw = 64;
@@ -72,42 +60,17 @@ void Player::render() {
 			targetRow = 64;
 			totalFrames = 6;
 			break;
+		default:
+			break;
 		}
 
-		int frameIndex = 0;
-		if (totalFrames > 1) {
-			frameIndex = (int)(GetTime() * 12.0f) % totalFrames;
-		}
+		curAnim = createSpriteAnimation(asset->getTexture(), 12, targetRow, totalFrames, fw, fh);
 
 		float scale = 2.f;
-		Texture t = (*playerAsset).getTexture();
-		Rectangle src = {(float)frameIndex * fw, (float)targetRow * fh, fw, fh};
-
-		if (!isFacingRight)
-			src.width = -fw;
-		else
-			src.width = fw;
-
 		Rectangle dest = {position.x, position.y, fw * scale, fh * scale};
 		Vector2 origin = {fw, fh};
-		DrawTexturePro(t, src, dest, origin, 0.0f, WHITE);
+		drawSpriteAnimation(curAnim, dest, origin, 0.f, !isFacingRight, WHITE);
 	}
-}
-
-Animation Player::CreateSpriteAnimation(Texture2D atlas, int framesPerSecond, std::vector<Rectangle> rects) {
-	Animation anim;
-	anim.atlas = atlas;
-	anim.framesPerSecond = framesPerSecond;
-	anim.rects = rects;
-	return anim;
-}
-
-void Player::DrawSpriteAnimation(Animation anim, Rectangle rect, Vector2 origin, float rotation, Color tint) {
-	if (anim.rects.empty() || anim.framesPerSecond == 0)
-		return;
-	int index = int(GetTime() * anim.framesPerSecond) % anim.rects.size();
-	Rectangle source = anim.rects[index];
-	DrawTexturePro(anim.atlas, source, rect, origin, rotation, tint);
 }
 
 void Player::handleInput(float dt) {
@@ -122,7 +85,7 @@ void Player::handleInput(float dt) {
 		isFacingRight = true;
 		pState = PlayerState::WALK;
 	}
-	if (IsKeyPressed(KEY_SPACE)) {
+	if (IsKeyPressed(KEY_SPACE) && isGrounded) {
 		pState = PlayerState::JUMP;
 		pVelocity.y = pJump;
 		isGrounded = false;
@@ -130,4 +93,10 @@ void Player::handleInput(float dt) {
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && pState != PlayerState::ATTACK) {
 		pState = PlayerState::ATTACK;
 	}
+}
+
+void Player::handlePhysics(float dt) {
+	pVelocity.y += pGravity * dt;
+	position.x += pVelocity.x * dt;
+	position.y += pVelocity.y * dt;
 }

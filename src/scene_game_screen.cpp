@@ -1,69 +1,96 @@
 #include "raylib.h"
 
 #include "../include/corpse.hpp"
-#include "../include/entity_manager.hpp"
-#include "../include/game.hpp"
-#include "../include/game_state.hpp"
 #include "../include/player.hpp"
-#include <vector>
+#include "../include/scene.hpp"
+#include "../include/services.hpp"
 
-GameState state;
+#include <vector>
 
 void GameScreen::onEnter() {
 	p = new Player();
 	p->setPosition((Vector2){40, 40});
-	Texture2D atlas = assetM.getAsset("default")->getTexture();
-	float frameWidth = 64.f;
-	float frameHeight = 64.f;
-	float sideWalkY = 11.f * frameHeight;
-	std::vector<Rectangle> walkFrames;
-	for (int i = 0; i < 9; i++) {
-		walkFrames.push_back({(float)i * frameWidth, sideWalkY, frameWidth, frameHeight});
-	}
-	p->currAnim = p->CreateSpriteAnimation(atlas, 12, walkFrames);
-	p->setPlayerAsset(assetM.getAsset("default"));
+	p->setAsset(Services::assets().getAsset("default"));
+
+	levelMap.loadTileset();
 
 	Corpse *c = new Corpse();
 	c->setPosition((Vector2){200, 200});
-	state.addCorpsePosition((Vector2){200, 200});
-	c->setAsset(assetM.getAsset("dead"));
-	entityManager.add(c);
+	Services::manager().addCorpsePosition((Vector2){200, 200});
+	c->setAsset(Services::assets().getAsset("dead"));
+	Services::entities().add(c);
 
-	// platforms
-	platforms.push_back({0, 500, 1200, 50});
-	platforms.push_back({200, 380, 200, 20});
-	platforms.push_back({500, 300, 200, 20});
+	camera = {0};
+	camera.offset = (Vector2){1200.f / 2.f, 700.f / 2.f};
+	camera.rotation = 0.f;
+	camera.zoom = 1.f;
 }
 
+// void GameScreen::resolveCollisions() {
+// 	// for (auto &platform : platforms) {
+// 		Rectangle playerHitbox = p->getHitbox();
+// 		if (!CheckCollisionRecs(playerHitbox, platform))
+// 			continue;
+
+// 		float leftOverlap = (playerHitbox.x + playerHitbox.width) - platform.x;
+// 		float rightOverlap = (platform.x + platform.width) - playerHitbox.x;
+// 		float topOverlap = (playerHitbox.y + playerHitbox.height) - platform.y;
+// 		float bottomOverlap = (platform.y + platform.height) - playerHitbox.y;
+
+// 		float minOverlapX = leftOverlap < rightOverlap ? leftOverlap : rightOverlap;
+// 		float minOverlapY = topOverlap < bottomOverlap ? topOverlap : bottomOverlap;
+
+// 		if (minOverlapY < minOverlapX) {
+// 			if (topOverlap < bottomOverlap) {
+// 				p->setPositionY(platform.y - playerHitbox.height / 2 + 10);
+// 				p->setVelocityY(0);
+// 				p->setGrounded(true);
+// 			} else {
+// 				p->setPositionY(platform.y + platform.height + playerHitbox.height / 2 - 10);
+// 				p->setVelocityY(0);
+// 			}
+// 		} else {
+// 			if (leftOverlap < rightOverlap) {
+// 				p->setPositionX(platform.x - playerHitbox.width / 2);
+// 			} else {
+// 				p->setPositionX(platform.x + platform.width + playerHitbox.width / 2);
+// 			}
+// 		}
+// 	// }
+// }
+
 void GameScreen::update(float dt) {
-	entityManager.flush();
-	entityManager.updateAll(dt);
+	Services::entities().flush();
+	Services::entities().updateAll(dt);
 	p->update(dt);
-	for (auto &platform : platforms) {
-		if (CheckCollisionRecs(p->getHitbox(), platform)) {
+	std::vector<Rectangle> tileHitbox = levelMap.getSolidTiles();
+	for (auto &tile : tileHitbox) {
+		Rectangle hb = p->getHitbox();
+		if (CheckCollisionRecs(hb, tile)) {
 			if (p->getVelocity().y > 0) {
-				p->setPositionY(platform.y - (p->getHitbox().height / 2));
+				p->setPositionY(tile.y - (p->getHitbox().height / 2));
 				p->setGrounded(true);
 				p->setVelocityY(0);
 			}
 		}
 	}
+	// resolveCollisions();
 }
 
 void GameScreen::render() {
 	BeginDrawing();
 	ClearBackground(BLACK);
-	Texture bg = assetM.getAsset("background")->getTexture();
+	Texture2D bg = Services::assets().getAsset("background")->getTexture();
 	DrawTexture(bg, 0, 0, (Color){255, 255, 255, 100});
-	entityManager.renderAll();
+	BeginMode2D(camera);
+	levelMap.render();
+	Services::entities().renderAll();
 	p->render();
-	for (auto &platform : platforms) {
-		DrawRectangleRec(platform, BROWN);
-	}
+	EndMode2D();
 	EndDrawing();
 }
 
 void GameScreen::onExit() {
-	entityManager.clear();
+	Services::entities().clear();
 	delete p;
 }

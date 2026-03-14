@@ -7,13 +7,13 @@
 
 class Entity {
 protected:
-	bool collidable;
-	Asset *asset;
+	bool collidable = true;
+	Asset *asset = nullptr;
 	Vector2 position;
 	Rectangle hitbox;
 
 public:
-	Entity(int hWidth, int hHeight) { hitbox = {position.x, position.y, (float)hWidth, (float)hHeight}; }
+	Entity(int w, int h) { hitbox = {position.x, position.y, (float)w, (float)h}; }
 	Asset *getAsset() { return asset; }
 	void setAsset(Asset *a) { asset = a; }
 	Vector2 getPosition() { return position; }

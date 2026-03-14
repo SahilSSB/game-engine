@@ -10,8 +10,7 @@ class Asset {
 private:
 	std::string assetName;
 	std::string filePath;
-	Texture tex;
-  Texture2D atlas;
+	Texture2D tex;
 
 public:
 	std::string getAssetName() { return assetName; }
@@ -20,8 +19,8 @@ public:
 		filePath = "assets/sprites/" + name + ".png";
 	}
 	std::string getAssetFilePath() { return filePath; }
-	Texture getTexture() { return tex; }
-	void setTexture(Texture newtex) { tex = newtex; }
+	Texture2D getTexture() { return tex; }
+	void setTexture(Texture2D newtex) { tex = newtex; }
 	void unloadTexture() { UnloadTexture(tex); }
 };
 
@@ -30,11 +29,13 @@ private:
 	std::unordered_map<std::string, Asset> assets;
 
 public:
+	static AssetManager &get() {
+		static AssetManager assetM;
+		return assetM;
+	}
 	void loadAsset(std::string assetName);
 	void unloadAsset(std::string assetName);
 	Asset *getAsset(std::string assetName);
 };
-
-extern AssetManager assetM;
 
 #endif

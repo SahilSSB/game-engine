@@ -29,12 +29,14 @@ private:
 	std::unordered_map<std::string, Audio> sounds;
 
 public:
+	static AudioManager &get() {
+		static AudioManager audioM;
+		return audioM;
+	}
 	void loadSound(std::string audioName);
 	void unloadSound(std::string audioName);
 	void playSound(std::string audioName);
 	void stopSound(std::string audioName);
 };
-
-extern AudioManager audioM;
 
 #endif

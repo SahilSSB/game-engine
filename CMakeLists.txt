@@ -8,11 +8,11 @@ add_subdirectory(raylib)
 
 add_executable(Engine2D
 	src/main.cpp
-	src/game.cpp
 	src/asset_manager.cpp
 	src/audio_manager.cpp
 	src/player.cpp
 	src/corpse.cpp
 	src/scene_game_screen.cpp
+	src/animation.cpp
 )
 target_link_libraries(Engine2D raylib)

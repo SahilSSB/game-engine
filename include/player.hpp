@@ -1,16 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "asset_manager.hpp"
+#include "animation.hpp"
 #include "entity.hpp"
 #include "raylib.h"
-#include <vector>
-
-struct Animation {
-	Texture2D atlas;
-	int framesPerSecond;
-	std::vector<Rectangle> rects;
-};
 
 enum class PlayerState { NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH };
 
@@ -19,41 +12,33 @@ private:
 	float pJump = -600.f;
 	float pGravity = 1600.f;
 	float pSpeed = 200.0f;
+	Vector2 pVelocity = {0, 0};
 	bool isGrounded = false;
 	bool isFacingRight = true;
 
-	int pCurrentFrame = 0;
-	float pAnimationTimer = 0.f;
-	float pFrameDuration = 0.15f;
-	const int NUM_FRAMES = 4;
+	Animation curAnim;
+	float pAttackTimer = 0.f;
 
-	Vector2 pVelocity = {0, 0};
-	Asset *playerAsset = nullptr;
-	int framesPerSecond = 0;
-	Rectangle *rects;
-	Texture2D atlas;
+	PlayerState pState;
+
+	void handleInput(float dt);
+	void handlePhysics(float dt);
 
 public:
 	Player();
-	PlayerState pState;
-	Animation currAnim;
-	Asset *getPlayerAsset() { return playerAsset; }
-	void setPlayerAsset(Asset *a) { playerAsset = a; }
-	Vector2 getPosition() { return position; }
-	void setPosition(Vector2 pos) { position = pos; }
 	void updateHitbox() override;
 	void update(float dt) override;
 	void render() override;
-	Animation CreateSpriteAnimation(Texture2D atlas, int framesPerSecond, std::vector<Rectangle> rect);
-	void DrawSpriteAnimation(Animation anim, Rectangle rect, Vector2 origin, float rotation, Color tint);
-	void handleInput(float dt);
+
 	PlayerState getPlayerState() { return pState; }
 	void setPlayerState(PlayerState s) { pState = s; }
-
 	Rectangle getHitbox() { return hitbox; }
+	void setHitbox(Rectangle newh) { hitbox = newh; }
 	Vector2 getVelocity() { return pVelocity; }
-	void setVelocityY(float y) { pVelocity.y = y; }
+	void setPositionX(float x) { position.x = x; }
 	void setPositionY(float y) { position.y = y; }
+	void setVelocityX(float x) { pVelocity.x = x; }
+	void setVelocityY(float y) { pVelocity.y = y; }
 	void setGrounded(bool g) { isGrounded = g; }
 };
 
