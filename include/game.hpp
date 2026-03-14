@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "entity.hpp"
+#include "player.hpp"
 #include "scene.hpp"
 
 class MainMenu : public Scene {
@@ -23,12 +24,15 @@ public:
 };
 
 class GameScreen : public Scene {
+private:
+	Player *player;
+	std::vector<Entity *> entities;
+
 public:
 	void onEnter() override;
 	void onExit() override;
 	void update(float dt) override;
 	void render() override;
-	std::vector<Entity *> entities;
 };
 
 class GameOver : public Scene {

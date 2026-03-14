@@ -1,8 +1,8 @@
-#include "../include/player.hpp"
+#include "../include/corpse.hpp"
 
-void Player::update(float dt) {}
+void Corpse::update(float dt) {}
 
-void Player::render() {
+void Corpse::render() {
 	if (asset != nullptr) {
 		Texture t = (*asset).getTexture();
 		Rectangle src = {0, 0, (float)t.width, (float)t.height};

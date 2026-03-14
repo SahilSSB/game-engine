@@ -16,9 +16,13 @@ void AudioManager::unloadSound(std::string audioName) {
 }
 
 void AudioManager::playSound(std::string audioName) {
-	PlaySound(sounds[audioName].getSound());
+	auto it = sounds.find(audioName);
+	if (it == sounds.end()) return;
+	PlaySound((it->second).getSound());
 }
 
 void AudioManager::stopSound(std::string audioName) {
-	StopSound(sounds[audioName].getSound());
+	auto it = sounds.find(audioName);
+	if (it == sounds.end()) return;
+	StopSound((it->second).getSound());
 }

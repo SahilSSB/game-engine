@@ -5,10 +5,12 @@
 #include "../include/asset_manager.hpp"
 #include "../include/audio_manager.hpp"
 #include "../include/game.hpp"
+#include "../include/game_state.hpp"
 #include "../include/scene.hpp"
 
 AudioManager audioM;
 AssetManager assetM;
+GameState state;
 
 std::stack<Scene *> sceneStack;
 
@@ -22,8 +24,8 @@ int main() {
 	SetTargetFPS(60);
 	InitAudioDevice();
 
-	assetM.loadAsset("knight-sprites");
-	audioM.loadSound("test");
+	assetM.loadAsset("knight-nobg");
+	assetM.loadAsset("test2");
 
 	sceneStack.push(&mm);
 	sceneStack.top()->onEnter();
@@ -60,9 +62,6 @@ int main() {
 			}
 		}
 
-		if (IsKeyPressed(KEY_A)) {
-			audioM.playSound("test");
-		}
 		sceneStack.top()->update(deltaTime);
 		sceneStack.top()->render();
 	}

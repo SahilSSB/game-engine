@@ -2,16 +2,20 @@
 #define PLAYER_H
 
 #include "entity.hpp"
-#include "asset_manager.hpp"
+
+enum PlayerState {
+	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
+};
 
 class Player : public Entity {
 private:
-	Asset *playerAsset = nullptr;
+	Vector2 velocity;
+	PlayerState playerState;
 public:
-	Asset *getPlayerAsset() { return playerAsset; }
-	void setPlayerAsset(Asset *a) { playerAsset = a; }
-	Vector2 getPosition() { return position; }
-	void setPosition(Vector2 pos) { position = pos; }
+	Vector2 getVelocity() { return velocity; }
+	void setVelocity(Vector2 v) { velocity = v; }
+	PlayerState getPlayerState() { return playerState; }
+	void setPlayerState(PlayerState s) { playerState = s; }
 	void update(float dt) override;
 	void render() override;
 };
