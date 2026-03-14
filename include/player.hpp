@@ -7,40 +7,38 @@
 #include <vector>
 
 struct Animation {
-  Texture2D atlas;
-  int framesPerSecond;
-  std::vector<Rectangle> rects;
-  int rectLength;
+	Texture2D atlas;
+	int framesPerSecond;
+	std::vector<Rectangle> rects;
+	int rectLength;
 };
 
-enum class PlayerState {
-	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
-};
-
-enum PlayerState { NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH };
+enum class PlayerState { NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH };
 
 class Player : public Entity {
 private:
-  float pJump = -600.f;
-  float pGravity = 1600.f;
-  bool isGrounded = false;
-  bool isFacingRight = true;
+	float pJump = -600.f;
+	float pGravity = 1600.f;
+	float pSpeed = 200.0f;
+	bool isGrounded = false;
+	bool isFacingRight = true;
 
-  int pCurrentFrame = 0;
-  float pAnimationTimer = 0.f;
-  float pFrameDuration = 0.15f;
-  const int NUM_FRAMES = 4;
+	int pCurrentFrame = 0;
+	float pAnimationTimer = 0.f;
+	float pFrameDuration = 0.15f;
+	const int NUM_FRAMES = 4;
 
-  Vector2 pVelocity = {0 ,0};
+	Vector2 pVelocity = {0, 0};
 	Asset *playerAsset = nullptr;
-  int framesPerSecond = 0;
-  Rectangle* rects;
-  int rectLength = 0;
-  Texture2D atlas;
+	int framesPerSecond = 0;
+	Rectangle *rects;
+	int rectLength = 0;
+	Texture2D atlas;
 
 public:
-  PlayerState pState;
-  Animation currAnim;
+	Player();
+	PlayerState pState;
+	Animation currAnim;
 	Asset *getPlayerAsset() { return playerAsset; }
 	void setPlayerAsset(Asset *a) { playerAsset = a; }
 	Vector2 getPosition() { return position; }
@@ -51,8 +49,8 @@ public:
 	Animation CreateSpriteAnimation(Texture2D atlas, int framesPerSecond, std::vector<Rectangle> rect);
 	void DrawSpriteAnimation(Animation anim, Rectangle rect, Vector2 origin, float rotation, Color tint);
 	void handleInput(float dt);
-	PlayerState getPlayerState() { return state; }
-	void setPlayerState(PlayerState s) { state = s; }
+	PlayerState getPlayerState() { return pState; }
+	void setPlayerState(PlayerState s) { pState = s; }
 };
 
 #endif
