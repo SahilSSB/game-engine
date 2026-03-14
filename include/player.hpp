@@ -7,38 +7,42 @@
 #include <vector>
 
 struct Animation {
-	Texture2D atlas;
-	int framesPerSecond;
-	std::vector<Rectangle> rects;
-	int rectLength;
+  Texture2D atlas;
+  int framesPerSecond;
+  std::vector<Rectangle> rects;
+  int rectLength;
+};
+
+enum class PlayerState {
+	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
 };
 
 enum PlayerState { NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH };
 
 class Player : public Entity {
 private:
-	float pSpeed = 200.f;
-	float pJump = -500.f;
-	float pGravity = 1600.f;
-	bool isGrounded = false;
-	bool isFacingRight = true;
+  float pJump = -600.f;
+  float pGravity = 1600.f;
+  bool isGrounded = false;
+  bool isFacingRight = true;
 
-	int pCurrentFrame = 0;
-	float pAnimationTimer = 0.f;
-	float pFrameDuration = 0.15f;
-	const int NUM_FRAMES = 4;
+  int pCurrentFrame = 0;
+  float pAnimationTimer = 0.f;
+  float pFrameDuration = 0.15f;
+  const int NUM_FRAMES = 4;
 
-	Vector2 pVelocity = {0, 0};
-	int framesPerSecond = 0;
-	Rectangle *rects;
-	int rectLength = 0;
-	Texture2D atlas;
-
-	PlayerState state;
+  Vector2 pVelocity = {0 ,0};
+	Asset *playerAsset = nullptr;
+  int framesPerSecond = 0;
+  Rectangle* rects;
+  int rectLength = 0;
+  Texture2D atlas;
 
 public:
-	Player();
-	Animation currAnim;
+  PlayerState pState;
+  Animation currAnim;
+	Asset *getPlayerAsset() { return playerAsset; }
+	void setPlayerAsset(Asset *a) { playerAsset = a; }
 	Vector2 getPosition() { return position; }
 	void setPosition(Vector2 pos) { position = pos; }
 	void updateHitbox() override;
