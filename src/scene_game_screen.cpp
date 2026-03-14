@@ -1,9 +1,13 @@
-#include "../include/entity_manager.hpp"
 #include "raylib.h"
 
+#include "../include/corpse.hpp"
+#include "../include/entity_manager.hpp"
 #include "../include/game.hpp"
+#include "../include/game_state.hpp"
 #include "../include/player.hpp"
 #include <vector>
+
+GameState state;
 
 void GameScreen::onEnter() {
 	Player *p = new Player();
@@ -19,27 +23,31 @@ void GameScreen::onEnter() {
   p->currAnim = p->CreateSpriteAnimation(atlas, 12, walkFrames);
   p->setPlayerAsset(assetM.getAsset("default"));
   entityManager.add(p);
-<<<<<<< HEAD
-=======
+  
   Texture2D tileMap = assetM.getAsset("tilemap")->getTexture();
   float tileW = 1024;
   float tileH = 1024;
   entityManager.add(tileMap);
->>>>>>> a77e24b (completed player animations)
+
+	Corpse *c = new Corpse();
+	c->setPosition((Vector2){200, 200});
+	state.addCorpsePosition((Vector2){200, 200});
+	c->setAsset(assetM.getAsset("dead"));
+	entityManager.add(c);
 }
 
 void GameScreen::update(float dt) {
-  entityManager.flush();
-  entityManager.updateAll(dt);
+	entityManager.flush();
+	entityManager.updateAll(dt);
 }
 
 void GameScreen::render() {
 	BeginDrawing();
 	ClearBackground(BLACK);
+	Texture bg = assetM.getAsset("background")->getTexture();
+	DrawTexture(bg, 0, 0, (Color){255, 255, 255, 100});
 	entityManager.renderAll();
-  EndDrawing();
+	EndDrawing();
 }
 
-void GameScreen::onExit() {
-  entityManager.clear();
-}
+void GameScreen::onExit() { entityManager.clear(); }
