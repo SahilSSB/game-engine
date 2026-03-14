@@ -11,6 +11,9 @@ struct Animation {
   int framesPerSecond;
   std::vector<Rectangle> rects;
   int rectLength;
+
+enum PlayerState {
+	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
 };
 
 class Player : public Entity {

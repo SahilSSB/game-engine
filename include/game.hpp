@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "entity.hpp"
+#include "player.hpp"
 #include "scene.hpp"
 #include "entity_manager.hpp"
 
@@ -24,6 +25,10 @@ public:
 };
 
 class GameScreen : public Scene {
+private:
+	Player *player;
+	std::vector<Entity *> entities;
+
 public:
   EntityManager entityManager;
 	void onEnter() override;

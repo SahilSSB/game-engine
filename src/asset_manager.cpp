@@ -18,5 +18,7 @@ void AssetManager::unloadAsset(std::string assetName) {
 }
 
 Asset *AssetManager::getAsset(std::string assetName) {
-	return &assets[assetName];
+	auto it = assets.find(assetName);
+	if (it == assets.end()) return nullptr;
+	return &it->second;
 }
