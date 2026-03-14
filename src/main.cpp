@@ -22,7 +22,7 @@ int main() {
 	SetTargetFPS(60);
 	InitAudioDevice();
 
-	assetM.loadAsset("knight-sprites");
+	assetM.loadAsset("default");
 	audioM.loadSound("test");
 
 	sceneStack.push(&mm);
