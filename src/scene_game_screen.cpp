@@ -19,6 +19,13 @@ void GameScreen::onEnter() {
   p->currAnim = p->CreateSpriteAnimation(atlas, 12, walkFrames);
   p->setPlayerAsset(assetM.getAsset("default"));
   entityManager.add(p);
+<<<<<<< HEAD
+=======
+  Texture2D tileMap = assetM.getAsset("tilemap")->getTexture();
+  float tileW = 1024;
+  float tileH = 1024;
+  entityManager.add(tileMap);
+>>>>>>> a77e24b (completed player animations)
 }
 
 void GameScreen::update(float dt) {

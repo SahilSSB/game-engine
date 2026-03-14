@@ -5,21 +5,35 @@
 #include "asset_manager.hpp"
 #include "raylib.h"
 #include <vector>
+<<<<<<< HEAD
 
 struct Animation {
   Texture2D atlas;
   int framesPerSecond;
   std::vector<Rectangle> rects;
   int rectLength;
+=======
+>>>>>>> a77e24b (completed player animations)
 
-enum PlayerState {
+struct Animation {
+  Texture2D atlas;
+  int framesPerSecond;
+  std::vector<Rectangle> rects;
+  int rectLength;
+};
+
+enum class PlayerState {
 	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
 };
 
 class Player : public Entity {
 private:
   float pSpeed = 200.f;
+<<<<<<< HEAD
   float pJump = -500.f;
+=======
+  float pJump = -600.f;
+>>>>>>> a77e24b (completed player animations)
   float pGravity = 1600.f;
   bool isGrounded = false;
   bool isFacingRight = true;
@@ -35,8 +49,13 @@ private:
   Rectangle* rects;
   int rectLength = 0;
   Texture2D atlas;
+<<<<<<< HEAD
 
 public:
+=======
+public:
+  PlayerState pState;
+>>>>>>> a77e24b (completed player animations)
   Animation currAnim;
 	Asset *getPlayerAsset() { return playerAsset; }
 	void setPlayerAsset(Asset *a) { playerAsset = a; }
