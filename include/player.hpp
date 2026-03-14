@@ -37,9 +37,11 @@ private:
 	PlayerState state;
 
 public:
+	Player();
 	Animation currAnim;
 	Vector2 getPosition() { return position; }
 	void setPosition(Vector2 pos) { position = pos; }
+	void updateHitbox() override;
 	void update(float dt) override;
 	void render() override;
 	Animation CreateSpriteAnimation(Texture2D atlas, int framesPerSecond, std::vector<Rectangle> rect);

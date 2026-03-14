@@ -5,6 +5,8 @@
 
 class Corpse : public Entity {
 public:
+	Corpse();
+	void updateHitbox() override;
 	void update(float dt) override;
 	void render() override;
 };

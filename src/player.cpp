@@ -2,6 +2,13 @@
 #include "raylib.h"
 #include <vector>
 
+Player::Player() : Entity(50, 100) {}
+
+void Player::updateHitbox() {
+	hitbox.x = position.x - hitbox.width / 2;
+	hitbox.y = position.y - hitbox.height / 2 + 10;
+}
+
 void Player::update(float dt) {
 	handleInput(dt);
 	pVelocity.y += pGravity * dt;
@@ -22,10 +29,13 @@ void Player::update(float dt) {
 	} else {
 		pCurrentFrame = 0;
 	}
+
+	updateHitbox();
 }
 
 void Player::render() {
 	if (asset != nullptr) {
+		DrawRectangleRec(hitbox, RED);
 		float scale = 1.f;
 		Texture t = (*asset).getTexture();
 		int frameIndex = 0;

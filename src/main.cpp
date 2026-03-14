@@ -10,7 +10,7 @@
 
 AudioManager audioM;
 AssetManager assetM;
-GameState state;
+GameState gameState;
 
 std::stack<Scene *> sceneStack;
 
@@ -25,6 +25,8 @@ int main() {
 	InitAudioDevice();
 
 	assetM.loadAsset("default");
+	assetM.loadAsset("dead");
+	assetM.loadAsset("background");
 	audioM.loadSound("test");
 
 	sceneStack.push(&mm);

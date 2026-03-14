@@ -1,9 +1,13 @@
-#include "../include/entity_manager.hpp"
 #include "raylib.h"
 
+#include "../include/corpse.hpp"
+#include "../include/entity_manager.hpp"
 #include "../include/game.hpp"
+#include "../include/game_state.hpp"
 #include "../include/player.hpp"
 #include <vector>
+
+GameState state;
 
 void GameScreen::onEnter() {
 	Player *p = new Player();
@@ -20,6 +24,12 @@ void GameScreen::onEnter() {
 	p->setAsset(assetM.getAsset("default"));
 	p->setPlayerState(NORMAL);
 	entityManager.add(p);
+
+	Corpse *c = new Corpse();
+	c->setPosition((Vector2){200, 200});
+	state.addCorpsePosition((Vector2){200, 200});
+	c->setAsset(assetM.getAsset("dead"));
+	entityManager.add(c);
 }
 
 void GameScreen::update(float dt) {
@@ -30,6 +40,8 @@ void GameScreen::update(float dt) {
 void GameScreen::render() {
 	BeginDrawing();
 	ClearBackground(BLACK);
+	Texture bg = assetM.getAsset("background")->getTexture();
+	DrawTexture(bg, 0, 0, (Color){255, 255, 255, 100});
 	entityManager.renderAll();
 	EndDrawing();
 }

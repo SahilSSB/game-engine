@@ -12,6 +12,7 @@ add_executable(Engine2D
 	src/asset_manager.cpp
 	src/audio_manager.cpp
 	src/player.cpp
+	src/corpse.cpp
 	src/scene_game_screen.cpp
 )
 target_link_libraries(Engine2D raylib)
