@@ -24,8 +24,8 @@ int main() {
 	SetTargetFPS(60);
 	InitAudioDevice();
 
-	assetM.loadAsset("knight-nobg");
-	assetM.loadAsset("test2");
+	assetM.loadAsset("default");
+	audioM.loadSound("test");
 
 	sceneStack.push(&mm);
 	sceneStack.top()->onEnter();

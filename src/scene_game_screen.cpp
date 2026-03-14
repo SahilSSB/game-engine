@@ -1,54 +1,38 @@
+#include "../include/entity_manager.hpp"
 #include "raylib.h"
 
 #include "../include/game.hpp"
 #include "../include/player.hpp"
-#include "../include/game_state.hpp"
+#include <vector>
 
 void GameScreen::onEnter() {
-	player = new Player();
-	player->setPosition((Vector2){0, 0});
-	player->setPlayerState(NORMAL);
-	player->setAsset(assetM.getAsset("test2"));
+	Player *p = new Player();
+	p->setPosition((Vector2){40, 40});
+	Texture2D atlas = assetM.getAsset("default")->getTexture();
+  float frameWidth = 64.f;
+  float frameHeight = 64.f;
+  float sideWalkY = 11.f * frameHeight;
+  std::vector<Rectangle> walkFrames;
+    for (int i = 0; i < 9; i++) {
+        walkFrames.push_back({ (float)i * frameWidth, sideWalkY, frameWidth, frameHeight });
+    }
+  p->currAnim = p->CreateSpriteAnimation(atlas, 12, walkFrames);
+  p->setPlayerAsset(assetM.getAsset("default"));
+  entityManager.add(p);
 }
 
 void GameScreen::update(float dt) {
-	float speed = 400;
-	Vector2 pos = player->getPosition();
-
-	if (IsKeyDown(KEY_LEFT_SHIFT)) {
-		speed += 200;
-	}
-
-	if (IsKeyDown(KEY_W)) {
-		if (pos.y > 0) pos.y -= speed * dt;
-	}
-	if (IsKeyDown(KEY_S)) {
-		if (pos.y < 700) pos.y += speed * dt;
-	}
-	if (IsKeyDown(KEY_A)) {
-		if (pos.x > 0) pos.x -= speed * dt;
-	}
-	if (IsKeyDown(KEY_D)) {
-		if (pos.x < 1200) pos.x += speed * dt;
-	}
-	
-	player->setPosition(pos);
+  entityManager.flush();
+  entityManager.updateAll(dt);
 }
 
 void GameScreen::render() {
 	BeginDrawing();
-	ClearBackground(BEIGE);
-	DrawText("Game Screen", 350, 350, 30, BLACK);
-	player->render();
-	for (const auto &entity : entities) {
-		entity->render();
-	}
-	EndDrawing();
+	ClearBackground(BLACK);
+	entityManager.renderAll();
+  EndDrawing();
 }
 
 void GameScreen::onExit() {
-	for (const auto &entity : entities) {
-		delete entity;
-	}
-	entities.clear();
+  entityManager.clear();
 }

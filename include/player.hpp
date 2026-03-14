@@ -2,6 +2,15 @@
 #define PLAYER_H
 
 #include "entity.hpp"
+#include "asset_manager.hpp"
+#include "raylib.h"
+#include <vector>
+
+struct Animation {
+  Texture2D atlas;
+  int framesPerSecond;
+  std::vector<Rectangle> rects;
+  int rectLength;
 
 enum PlayerState {
 	NORMAL, WALK, JUMP, ATTACK, BLOCK, DASH
@@ -9,15 +18,35 @@ enum PlayerState {
 
 class Player : public Entity {
 private:
-	Vector2 velocity;
-	PlayerState playerState;
+  float pSpeed = 200.f;
+  float pJump = -500.f;
+  float pGravity = 1600.f;
+  bool isGrounded = false;
+  bool isFacingRight = true;
+
+  int pCurrentFrame = 0;
+  float pAnimationTimer = 0.f;
+  float pFrameDuration = 0.15f;
+  const int NUM_FRAMES = 4;
+
+  Vector2 pVelocity = {0 ,0};
+	Asset *playerAsset = nullptr;
+  int framesPerSecond = 0;
+  Rectangle* rects;
+  int rectLength = 0;
+  Texture2D atlas;
+
 public:
-	Vector2 getVelocity() { return velocity; }
-	void setVelocity(Vector2 v) { velocity = v; }
-	PlayerState getPlayerState() { return playerState; }
-	void setPlayerState(PlayerState s) { playerState = s; }
+  Animation currAnim;
+	Asset *getPlayerAsset() { return playerAsset; }
+	void setPlayerAsset(Asset *a) { playerAsset = a; }
+	Vector2 getPosition() { return position; }
+	void setPosition(Vector2 pos) { position = pos; }
 	void update(float dt) override;
 	void render() override;
+  Animation CreateSpriteAnimation(Texture2D atlas, int framesPerSecond, std::vector<Rectangle> rect);
+  void DrawSpriteAnimation(Animation anim, Rectangle rect, Vector2 origin, float rotation, Color tint);
+  void handleInput(float dt);
 };
 
 #endif

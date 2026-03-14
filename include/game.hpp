@@ -6,6 +6,7 @@
 #include "entity.hpp"
 #include "player.hpp"
 #include "scene.hpp"
+#include "entity_manager.hpp"
 
 class MainMenu : public Scene {
 public:
@@ -29,6 +30,7 @@ private:
 	std::vector<Entity *> entities;
 
 public:
+  EntityManager entityManager;
 	void onEnter() override;
 	void onExit() override;
 	void update(float dt) override;

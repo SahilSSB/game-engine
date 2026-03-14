@@ -11,6 +11,7 @@ private:
 	std::string assetName;
 	std::string filePath;
 	Texture tex;
+  Texture2D atlas;
 
 public:
 	std::string getAssetName() { return assetName; }

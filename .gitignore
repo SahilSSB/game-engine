@@ -3,3 +3,6 @@ build/
 raylib/
 assets/
 .cache/
+.DS_Store
+compile_flags.txt
+CMakeLists.txt
