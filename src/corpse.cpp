@@ -10,6 +10,7 @@ void Corpse::updateHitbox() {
 void Corpse::update(float dt) { updateHitbox(); }
 
 void Corpse::render() {
+  DrawRectangle(position.x - 50, position.y - 25, 100, 50, GREEN);
 	if (asset != nullptr) {
 		DrawRectangleRec(hitbox, RED);
 		Texture t = (*asset).getTexture();

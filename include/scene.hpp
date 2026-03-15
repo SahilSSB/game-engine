@@ -24,6 +24,7 @@ private:
   TileMap layer2;
 	Camera2D camera;
   std::vector<Corpse*> corpses;
+  bool corpseSpawned = false;
 	void resolveCollisions();
   float fadeAlpha = 0.f;
   bool isFading = false;

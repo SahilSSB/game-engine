@@ -32,12 +32,6 @@ void GameScreen::onEnter() {
   layer2.addTileset("assets/sprites/mid.png", 9, 9, tilesize);
   layer2.loadMapCSV("assets/sprites/hackathon_Tile Layer 2.csv");
 
-	/*Corpse *c = new Corpse();
-	c->setPosition((Vector2){200, 200});
-	Services::manager().addCorpsePosition((Vector2){200, 200});
-	c->setAsset(Services::assets().getAsset("dead"));
-	Services::entities().add(c);*/
-
 	camera = {0};
 	camera.offset = (Vector2){1200.f / 2.f, 700.f / 2.f};
 	camera.rotation = 0.f;
@@ -85,13 +79,21 @@ void GameScreen::update(float dt) {
   p->tickIFrames(dt);
   p->setGrounded(false);
 
-  if (p->checkDead() && !isFading) {
-        isFading = true;
-        Corpse* c = new Corpse();
-        c->setPosition(p->getPosition());
-        c->setAsset(Services::assets().getAsset("dead"));
-        Services::entities().add(c);
-        corpses.push_back(c);
+  if (p->checkDead() && !corpseSpawned) {
+    corpseSpawned = true;
+    isFading = true;
+    if (!corpses.empty()) {
+      corpses.back()->setPosition(p->getPosition());
+    }
+    else {
+    Corpse* c = new Corpse();
+    c->setPosition(p->getPosition());
+    c->setAsset(Services::assets().getAsset("dead"));
+    Services::entities().add(c);
+    corpses.push_back(c);
+    TraceLog(LOG_INFO, "Corpse spawned at %.1f %.1f, total corpses: %d", 
+             p->getPosition().x, p->getPosition().y, (int)corpses.size());
+    }
   }
 
 	std::vector<Rectangle> layer1Hitboxes = layer1.getSolidTiles();
@@ -115,7 +117,7 @@ void GameScreen::update(float dt) {
   allSpikes.insert(allSpikes.end(), spikesL2.begin(), spikesL2.end());
   for (auto &spike : allSpikes) {
       if (CheckCollisionRecs(p->getHitbox(), spike)) {
-        p->takeDamage(10); 
+        p->takeDamage(40); 
         p->setVelocityY(-400); 
         if (p->getPosition().x < (spike.x + 32)) p->setVelocityX(-300);
         else p->setVelocityX(300);
@@ -169,6 +171,7 @@ void GameScreen::update(float dt) {
             fadeAlpha = 0.f;
             isFading = false;
             isRespawning = false;
+            corpseSpawned = false; 
         }
     }
   }

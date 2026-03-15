@@ -45,4 +45,13 @@ public:
 		entities.clear();
 		toRemove.clear();
 	}
+  void removeImmediate(Entity* entity) {
+    for (int i = 0; i < entities.size(); i++) {
+        if (entities[i] == entity) {
+            delete entities[i];
+            entities.erase(entities.begin() + i);
+            break;
+        }
+    }
+  }
 };

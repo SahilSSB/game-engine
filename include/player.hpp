@@ -37,6 +37,10 @@ private:
   Rectangle attackHitbox = {0, 0, 0, 0};
   bool isAttackActive = false;
 
+  bool isGhost = false;
+  float ghostTimer = 0.f;
+  float ghostDuration = 20.f;
+
 public:
 	Player();
 	void updateHitbox() override;
