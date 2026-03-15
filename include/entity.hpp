@@ -18,6 +18,7 @@ public:
 	void setAsset(Asset *a) { asset = a; }
 	Vector2 getPosition() { return position; }
 	void setPosition(Vector2 pos) { position = pos; }
+  Rectangle getHitbox() { return hitbox; }
 	virtual void updateHitbox() = 0;
 	virtual void update(float dt) = 0;
 	virtual void render() = 0;
