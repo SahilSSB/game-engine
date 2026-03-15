@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 
-Player::Player() : Entity(80,100) {}
+Player::Player() : Entity(60,100) {}
 
 void Player::updateHitbox() {
 	hitbox.x = position.x - hitbox.width / 2;
