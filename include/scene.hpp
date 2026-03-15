@@ -5,6 +5,7 @@
 
 #include "player.hpp"
 #include "tile_map.hpp"
+#include "corpse.hpp"
 
 class Scene {
 public:
@@ -19,14 +20,25 @@ class GameScreen : public Scene {
 private:
 	Player *p;
 	TileMap levelMap;
+  TileMap layer1;
+  TileMap layer2;
 	Camera2D camera;
+  std::vector<Corpse*> corpses;
 	void resolveCollisions();
+  float fadeAlpha = 0.f;
+  bool isFading = false;
+  float fadeDuration = 2.0f;
+
+
 
 public:
 	void onEnter() override;
 	void onExit() override;
 	void update(float dt) override;
 	void render() override;
+
+  Vector2 respawnPoint = {200, 200};  
+  bool isRespawning = false;
 };
 
 #endif

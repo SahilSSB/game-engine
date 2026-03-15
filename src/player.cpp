@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 
-Player::Player() : Entity(40, 100) {}
+Player::Player() : Entity(80,100) {}
 
 void Player::updateHitbox() {
 	hitbox.x = position.x - hitbox.width / 2;
@@ -13,10 +13,15 @@ void Player::updateHitbox() {
 }
 
 void Player::update(float dt) {
+  if (isDead || health <= 0) {
+        pState = PlayerState::DEATH;
+        pVelocity = {0, 0};
+        return;
+  }
 	handleInput(dt);
 	handlePhysics(dt);
 	updateHitbox();
-
+  updateAttackHitbox();
 	if (pState == PlayerState::ATTACK) {
 		pAttackTimer += dt;
 		if (pAttackTimer >= 0.70f) {
@@ -37,6 +42,7 @@ void Player::update(float dt) {
 void Player::render() {
 	if (asset != nullptr) {
 		DrawRectangleRec(hitbox, RED);
+    if (isAttackActive) DrawRectangleRec(attackHitbox, {0, 255, 0, 120});
 		int targetRow = 0;
 		int totalFrames = 1;
 		float fw = 64;
